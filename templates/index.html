@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusWay | Campus Navigation</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <a class="brand" href="#"><span class="brand-mark">↗</span> Campus<span>Way</span></a>
+        <div class="nav-tag"><span class="live-dot"></span> STUDENT NAVIGATION</div>
+    </nav>
+
+    <main>
+        <section class="hero">
+            <div class="hero-copy">
+                <div class="eyebrow"><span></span> YOUR CAMPUS, SIMPLIFIED</div>
+                <h1>Find your way.<br><span>Own your day.</span></h1>
+                <p>Navigate your campus with confidence. Choose any two locations and discover the shortest walking route in seconds.</p>
+                <div class="hero-points">
+                    <div><span class="point-icon">⌁</span> Shortest routes</div>
+                    <div><span class="point-icon">◎</span> 9 campus places</div>
+                    <div><span class="point-icon">↗</span> Distance in meters</div>
+                </div>
+            </div>
+            <div class="hero-art" aria-label="Illustration of a campus map">
+                <div class="map-grid"></div>
+                <svg class="route-art" viewBox="0 0 420 300" role="img" aria-label="Decorative route map">
+                    <path d="M30 230 L105 230 L105 170 L190 170 L190 95 L285 95 L285 40 L380 40" fill="none" stroke="#c6f1df" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M30 230 L105 230 L105 170 L190 170 L190 95 L285 95 L285 40 L380 40" fill="none" stroke="#167d66" stroke-width="4" stroke-dasharray="7 9" stroke-linecap="round"/>
+                    <circle cx="30" cy="230" r="12" fill="#fff" stroke="#167d66" stroke-width="5"/>
+                    <circle cx="380" cy="40" r="12" fill="#167d66" stroke="#fff" stroke-width="5"/>
+                    <rect x="125" y="35" width="78" height="46" rx="10" fill="#fff" transform="rotate(-8 125 35)"/>
+                    <rect x="245" y="165" width="90" height="52" rx="10" fill="#e6f5ef" transform="rotate(7 245 165)"/>
+                    <rect x="20" y="65" width="85" height="58" rx="12" fill="#f8e7c8"/>
+                    <path d="M42 98 L63 78 L84 98 V113 H42 Z" fill="#d5a65b"/>
+                    <rect x="55" y="99" width="15" height="14" fill="#fff5e5"/>
+                    <path d="M295 235 l23 -32 23 32 z" fill="#b7dcd0"/>
+                    <circle cx="318" cy="228" r="7" fill="#167d66"/>
+                    <text x="132" y="61" fill="#1f3e37" font-size="11" font-weight="700">LIBRARY</text>
+                    <text x="258" y="193" fill="#1f3e37" font-size="11" font-weight="700">SCIENCE</text>
+                </svg>
+                <div class="floating-chip chip-top"><span>✦</span> Smart routing</div>
+                <div class="floating-chip chip-bottom"><span class="mini-pin">●</span> You’re on your way</div>
+            </div>
+        </section>
+
+        <section class="planner-section">
+            <div class="section-heading">
+                <div>
+                    <div class="eyebrow">ROUTE PLANNER</div>
+                    <h2>Where do you want to go?</h2>
+                </div>
+                <div class="algorithm-pill"><span>◈</span> Powered by Dijkstra’s algorithm</div>
+            </div>
+            <div class="planner-card">
+                <form method="POST" action="/" class="route-form">
+                    <div class="select-wrap">
+                        <label for="start">STARTING POINT</label>
+                        <div class="select-field"><span class="field-symbol start-symbol">●</span>
+                            <select id="start" name="start" required>
+                                {% for place in locations %}
+                                <option value="{{ place }}" {% if start == place %}selected{% endif %}>{{ place }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <button class="swap-button" type="button" onclick="swapLocations()" title="Swap locations" aria-label="Swap locations">⇄</button>
+                    <div class="select-wrap">
+                        <label for="destination">DESTINATION</label>
+                        <div class="select-field"><span class="field-symbol end-symbol">⌖</span>
+                            <select id="destination" name="destination" required>
+                                {% for place in locations %}
+                                <option value="{{ place }}" {% if destination == place %}selected{% endif %}>{{ place }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <button class="find-button" type="submit">Find shortest route <span>→</span></button>
+                </form>
+
+                {% if error %}
+                <div class="error-message">⚠ {{ error }}</div>
+                {% endif %}
+
+                {% if distance is not none %}
+                <div class="result-panel">
+                    <div class="result-top">
+                        <div>
+                            <div class="success-label"><span></span> ROUTE FOUND</div>
+                            <h3>{{ start }} <span class="muted-arrow">→</span> {{ destination }}</h3>
+                        </div>
+                        <div class="distance-box"><strong>{{ distance }}</strong><span>METERS TOTAL</span></div>
+                    </div>
+                    <div class="route-line">
+                        {% for place in path %}
+                        <div class="route-stop">
+                            <div class="stop-dot {% if loop.first %}first{% elif loop.last %}last{% endif %}">{{ loop.index }}</div>
+                            <div class="stop-name">{{ place }}</div>
+                            {% if not loop.last %}<div class="stop-connector"></div>{% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <p class="route-note">Follow the stops in order. The total distance is calculated from the campus graph.</p>
+                </div>
+                {% endif %}
+            </div>
+        </section>
+
+        <section class="places-section">
+            <div class="section-heading">
+                <div><div class="eyebrow">EXPLORE THE CAMPUS</div><h2>Places at a glance</h2></div>
+                <span class="places-count">09 LOCATIONS</span>
+            </div>
+            <div class="places-grid">
+                {% for place in location_cards %}
+                <div class="place-card">
+                    <div class="place-icon">{{ place.icon }}</div>
+                    <div><h3>{{ place.name }}</h3><p>{{ place.description }}</p></div>
+                    <span class="card-arrow">↗</span>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+        <footer><a class="brand footer-brand" href="#"><span class="brand-mark">↗</span> Campus<span>Way</span></a><p>Built with Python, Flask, graphs &amp; Dijkstra’s algorithm.</p><span>LEARN • EXPLORE • ARRIVE</span></footer>
+    </main>
+    <script>
+        function swapLocations() {
+            const start = document.getElementById('start');
+            const destination = document.getElementById('destination');
+            const previous = start.value;
+            start.value = destination.value;
+            destination.value = previous;
+        }
+    </script>
+</body>
+</html>
