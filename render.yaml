@@ -1,7 +1,7 @@
 services:
   - type: web
-    name: campusway
+    name: campusway-rakshanda
     runtime: python
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn app:app
-    healthCheckPath: /
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT
+    healthCheckPath: /
