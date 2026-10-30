@@ -1,6 +1,8 @@
 # CampusWay — Campus Navigation System Using Graphs
 
+[![Deploy to Streamlit](https://static.streamlit.io/badges/streamlit_badge_black.svg)](https://share.streamlit.io/deploy?repository=Rakshanda02/Campus_Navigation_System_Project&branch=main&main_file_path=streamlit_app.py)
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/Rakshanda02/Campus_Navigation_System_Project)
+
 
 A beginner-friendly Python web project that finds the shortest route between campus locations using **Dijkstra's algorithm**.
 
