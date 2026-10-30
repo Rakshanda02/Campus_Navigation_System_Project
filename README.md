@@ -1,6 +1,9 @@
 # CampusWay — Campus Navigation System Using Graphs
 
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/Rakshanda02/Campus_Navigation_System_Project)
+
 A beginner-friendly Python web project that finds the shortest route between campus locations using **Dijkstra's algorithm**.
+
 
 ## Features
 - Modern, responsive campus navigation interface
